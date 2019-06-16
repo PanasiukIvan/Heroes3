@@ -1,15 +1,20 @@
 <template>
   <div class="home">
     <h1>{{ msg }}</h1>
+    <MapComponent msg="XDDD"/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import MapComponent from '@/components/MapComponent.vue';
 
 @Component
 export default class HomeComponent extends Vue {
   @Prop() private msg!: string;
+  private components: any = {
+    MapComponent,
+  };
 }
 </script>
 
