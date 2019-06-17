@@ -14,13 +14,14 @@ export class ObjectPreference {
     }
 }
 
-export class Object {
+export class GameObject {
     index: string;                      // unique id of each object on map, ie coal_mine_1, coal_mine_2, etc
     posX: number;                       // x,y of left top corner of object
     posY: number;
     preferences: ObjectPreference;
 
-    constructor(x: number, y: number, preference: ObjectPreference) {
+    constructor(index: string, x: number, y: number, preference: ObjectPreference) {
+        this.index = index;
         this.posX = x;
         this.posY = y;
         this.preferences = preference;
@@ -49,11 +50,11 @@ export class ArtifactObject extends ObjectPreference {
 }
 
 let objectPreferences = [
-    new TerrainObject("tree", 1, 1, require('@/assets/tree.png')),
-    new BuildingObject("wood_warehouse", 4, 4, require('@/assets/tree.png')),
-    new BuildingObject("ore_warehouse", 4, 4, require('@/assets/tree.png')),
-    new BuildingObject("mercury_warehouse", 4, 4, require('@/assets/tree.png')),
-    new BuildingObject("gold_warehouse", 4, 4, require('@/assets/tree.png')),
+    new TerrainObject("tree", 1, 1, require('@/assets/dirt.png')),
+    new BuildingObject("wood_warehouse", 3, 3, require('@/assets/buildings/Warehouse_of_Wood.gif')),
+    new BuildingObject("ore_warehouse", 4, 4, require('@/assets/dirt.png')),
+    new BuildingObject("mercury_warehouse", 4, 4, require('@/assets/dirt.png')),
+    new BuildingObject("gold_warehouse", 4, 4, require('@/assets/dirt.png')),
 ]
 
 export {objectPreferences};

@@ -1,15 +1,16 @@
 import {TilePreference, tilePreferences} from "./resources/TilesPreferences";
-import {objectPreferences, Object} from "./resources/ObjectPreferences";
+import {GameObject} from "./resources/ObjectPreferences";
 import {GameConfig} from "./resources/GameConfig";
 
-export default class GameMap {
+export class GameMap {
     width: number;
     height: number;
-    tilesMap: Array<Array<TilePreference>>;
-    movementMap: Array<Array<number>>;
-    objects : Map<string, Object>;                             // map <object_id, object>
+    tilesMap: Array<Array<TilePreference>> = [];
+    movementMap: Array<Array<number>> = [];
+    objects : Map<string, GameObject> = new Map([]);                             // map <object_id, object>
 
     constructor(mapFile: any) {
+        console.log("Initiating Game Map object");
         this.width = mapFile.width;
         this.height = mapFile.height;
         this._loadTiles(mapFile.tiles);
@@ -29,7 +30,7 @@ export default class GameMap {
         });
     };
 
-    private _loadObjects(objects : Array<Object>) {
+    private _loadObjects(objects : Array<GameObject>) {
         // load objects
         this.objects = new Map([]);
         objects.forEach((obj) => {
@@ -47,7 +48,7 @@ export default class GameMap {
     private _createArray2D (width: number, height: number): Array<Array<TilePreference>> {
         let array = new Array(width);
         for (let i=0; i<width; i++) {
-            array[i] = new Array(height);
+            array[i] = new Array(height).fill(null);
         }
         return array;
     }

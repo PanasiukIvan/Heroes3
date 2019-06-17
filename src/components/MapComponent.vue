@@ -2,12 +2,12 @@
   <div class="map">
     <h1>{{ msg }}</h1>
     <div class='obj' v-for="obj in objects" style="position: relative; width: 0; height: 0" v-on:click="objectClicked(obj)">
-    <img alt="Vue logo" src="@/assets/inn.png" style="position: absolute" v-bind:style="{ left: obj.pos[0]*45 + 'px', top: obj.pos[1]*45 + 'px' }">
+      <img alt="obj" :src="obj.preferences.texturePath" style="position: absolute" v-bind:style="{ left: obj.posX*32 + 'px', top: obj.posY*32 + 'px' }">
     </div>
     <table>
-      <tr v-for="(tiles_row, tiles_row_id) in tiles">
+      <tr v-for="(tiles_row, tiles_row_id) in gameMap.tilesMap">
         <td v-for="(tiles_col, tiles_col_id) in tiles_row" class='tile'>
-           <img :src="mapFile.tiles_textures[tiles_col]" class="tile-img" v-on:click="tileClicked(tiles_row_id,tiles_col_id)"> 
+           <img :src="tiles_col.texturePath" class="tile-img" v-on:click="tileClicked(tiles_row_id,tiles_col_id)"> 
         </td>
       </tr>
     </table>
@@ -16,6 +16,9 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import {GameMap} from '@/core/GameMap';
+import {GameObject} from '@/core/resources/ObjectPreferences';
+import {GameConfig} from '@/core/resources/GameConfig';
 import map1 from '@/assets/MapFile.ts';
 
 @Component
@@ -24,19 +27,17 @@ export default class MapComponent extends Vue {
   private props: any = {
     msg: String
   };
-
-  private mapWidth: number = 1080;
-  private mapHeight: number = 720;
-  private mapFile: any = map1;
-  private tiles: any = map1.tiles;
-  private objects: any = map1.objects;
+  private gameMap: GameMap = new GameMap(map1);
+  private _tileSize = GameConfig.tileTextureSize; 
+  private objects: Array<GameObject> = Array.from(this.gameMap.objects.values());
 
   private tileClicked(row: number, col: number) {
+    console.log(this.objects);
     console.log("Tile [" + row + "," + col + "] clicked");
   };
 
   private objectClicked(object: any) {
-    console.log("Object clicked");
+    console.log("GameObject clicked");
   };
 }
 </script>
@@ -47,8 +48,8 @@ export default class MapComponent extends Vue {
 td, tr, img  { padding: 0px; margin: 0px; border: none; }
 
 .tile {
-  width: 45px;
-  height: 45px;
+  width: 32px;
+  height: 32px;
   background-color: green;
 }
 table { border-collapse: collapse; }

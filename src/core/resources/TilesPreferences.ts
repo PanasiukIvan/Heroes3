@@ -15,10 +15,10 @@ class TilePreference {
 }
 
 let tilePreferences = [
-    new TilePreference(0,8,require('@/assets/dirt.png'),"dirt"),
-    new TilePreference(0,5,require('@/assets/grass.png'),"grass"),
-    new TilePreference(0,3,require('@/assets/road.png'),"road"),
-    new TilePreference(0,GameConfig.TILE_CANNOT_WALK,require('@/assets/water.png'),"water"),
+    new TilePreference(0, 8, require('@/assets/terrain/Dirt_(s).gif'), 'dirt'),
+    new TilePreference(0, 5, require('@/assets/terrain/Terrain_Grass.png'), 'grass'),
+    new TilePreference(0, 3, require('@/assets/terrain/Dirt_(s).gif'), 'road'),
+    new TilePreference(0, GameConfig.TILE_CANNOT_WALK, require('@/assets/terrain/Water_(s).gif'), 'water'),
 ];
 
 export {TilePreference, tilePreferences};
