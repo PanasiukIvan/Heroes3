@@ -1,6 +1,9 @@
 import {CharacterObject} from "./resources/ObjectPreferences"; 
+import {GameMap} from "./GameMap";
 
 export class Player {
+    gameMap : GameMap;
+
     res_tree : number = 0;
     res_ore : number = 0;
     res_mercury : number = 0;
@@ -13,9 +16,10 @@ export class Player {
     heroes : Array<Hero>;
     activeHero : Hero;
 
-    constructor(heroes : Array<Hero>) {
+    constructor(heroes : Array<Hero>, gameMap : GameMap) {
         this.heroes = heroes;
         this.activeHero = this.heroes[0];
+        this.gameMap = gameMap;
     }
 
     public onTurnEnds() {
@@ -26,6 +30,10 @@ export class Player {
 
         this.heroes.forEach((hero) => hero.onTurnEnds());
     }
+
+    // public moveHero(destX : number, destY : number) : HeroMovement {
+
+    // }
 }
 
 export class Hero {
@@ -33,8 +41,6 @@ export class Hero {
     posY : number = 0;
     maxMovepoints : number = 30;
     movepoints : number = this.maxMovepoints;
-    destinationX : number = -1;
-    destinationY : number = -1;
     preference : CharacterObject;
 
 
@@ -45,4 +51,14 @@ export class Hero {
     public onTurnEnds() {
         this.movepoints = this.maxMovepoints;
     }
+}
+
+export class HeroMovement {
+    destX : number = 0;                         //destination of hero movement according to user input
+    destY : number = 0;  
+    landAtX : number = 0;                       // real destination (closest point to destination with respect to moving points)
+    landAtY : number = 0;
+    pathToLand : Array<Array<number>> = [];
+    restOfPath : Array<Array<number>> = [];
+    isPossible : boolean = false;                       // is it possible to reach destination
 }
