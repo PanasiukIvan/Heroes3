@@ -50,11 +50,12 @@ export class ArtifactObject extends ObjectPreference {
 }
 
 let objectPreferences = [
-    new TerrainObject("tree", 1, 1, require('@/assets/dirt.png')),
-    new BuildingObject("wood_warehouse", 3, 3, require('@/assets/buildings/Warehouse_of_Wood.gif')),
-    new BuildingObject("ore_warehouse", 4, 4, require('@/assets/dirt.png')),
-    new BuildingObject("mercury_warehouse", 4, 4, require('@/assets/dirt.png')),
-    new BuildingObject("gold_warehouse", 4, 4, require('@/assets/dirt.png')),
+    new TerrainObject("tree", 1, 1, require('@/assets/terrain/tree.png')),
+    new BuildingObject("wood_warehouse", 2, 2, require('@/assets/buildings/Warehouse_of_Wood.gif')),
+    new BuildingObject("ore_warehouse", 2, 2, require('@/assets/buildings/Warehouse_of_Ore.gif')),
+    new BuildingObject("mercury_warehouse", 2, 2, require('@/assets/buildings/Warehouse_of_Mercury.gif')),
+    new BuildingObject("gold_warehouse", 2, 2, require('@/assets/buildings/Warehouse_of_Gold.gif')),
+    new BuildingObject("castle", 4, 4, require('@/assets/buildings/Adventure_Map_Castle_fort.gif')),
 ]
 
 export {objectPreferences};

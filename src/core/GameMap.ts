@@ -36,12 +36,12 @@ export class GameMap {
         objects.forEach((obj) => {
             this.objects.set(obj.index, obj);
             // if object is interactive (item, building, npc) mark tiles as occupied
-            if (obj.preferences.isInteractive) {
-                this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_OCCUPIED);
-            } else {
-                // if object is interactive (item, building, npc) mark tiles as cannot walk
-                this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_CANNOT_WALK);
-            }
+            // if (obj.preferences.isInteractive) {
+            //     this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_OCCUPIED);
+            // } else {
+            //     // if object is interactive (item, building, npc) mark tiles as cannot walk
+            //     this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_CANNOT_WALK);
+            // }
         })
     }
 

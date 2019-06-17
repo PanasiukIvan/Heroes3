@@ -37,7 +37,7 @@ export default class MapComponent extends Vue {
   };
 
   private objectClicked(object: any) {
-    console.log("GameObject clicked");
+    console.log(object.index + "(" + object.posX + "," + object.posY + ") clicked");
   };
 }
 </script>
