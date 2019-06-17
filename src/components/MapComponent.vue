@@ -1,13 +1,13 @@
 <template>
   <div class="map">
     <h1>{{ msg }}</h1>
-    <div class='obj' v-for="obj in objects" style="position: relative; width: 0; height: 0">
+    <div class='obj' v-for="obj in objects" style="position: relative; width: 0; height: 0" v-on:click="objectClicked(obj)">
     <img alt="Vue logo" src="@/assets/inn.png" style="position: absolute" v-bind:style="{ left: obj.pos[0]*45 + 'px', top: obj.pos[1]*45 + 'px' }">
     </div>
     <table>
-      <tr v-for="tiles_row in tiles">
-        <td v-for="tiles_col in tiles_row" class='tile'>
-           <img :src="mapFile.tiles_textures[tiles_col]" class="tile-img"> 
+      <tr v-for="(tiles_row, tiles_row_id) in tiles">
+        <td v-for="(tiles_col, tiles_col_id) in tiles_row" class='tile'>
+           <img :src="mapFile.tiles_textures[tiles_col]" class="tile-img" v-on:click="tileClicked(tiles_row_id,tiles_col_id)"> 
         </td>
       </tr>
     </table>
@@ -30,6 +30,14 @@ export default class MapComponent extends Vue {
   private mapFile: any = map1;
   private tiles: any = map1.tiles;
   private objects: any = map1.objects;
+
+  private tileClicked(row: number, col: number) {
+    console.log("Tile [" + row + "," + col + "] clicked");
+  };
+
+  private objectClicked(object: any) {
+    console.log("Object clicked");
+  };
 }
 </script>
 
