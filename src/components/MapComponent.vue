@@ -1,16 +1,18 @@
 <template>
-  <div class="map">
-    <h1>{{ msg }}</h1>
-    <div class='obj' v-for="obj in objects" style="position: relative; width: 0; height: 0" v-on:click="objectClicked(obj)">
-      <img alt="obj" :src="obj.preferences.texturePath" style="position: absolute" v-bind:style="{ left: obj.posX*32 + 'px', top: obj.posY*32 + 'px' }">
+  <div class = "main">
+    <div class="map">
+      <h1>{{ msg }}</h1>
+      <div class='obj' v-for="obj in objects" style="position: relative; width: 0; height: 0" v-on:click="objectClicked(obj)">
+        <img alt="obj" :src="obj.preferences.texturePath" style="position: absolute" v-bind:style="{ left: obj.posX*32 + 'px', top: obj.posY*32 + 'px' }">
+      </div>
+      <table>
+        <tr v-for="(tiles_row, tiles_row_id) in gameMap.tilesMap">
+          <td v-for="(tiles_col, tiles_col_id) in tiles_row" class='tile'>
+            <img :src="tiles_col.texturePath" class="tile-img" v-on:click="tileClicked(tiles_row_id,tiles_col_id)"> 
+          </td>
+        </tr>
+      </table>
     </div>
-    <table>
-      <tr v-for="(tiles_row, tiles_row_id) in gameMap.tilesMap">
-        <td v-for="(tiles_col, tiles_col_id) in tiles_row" class='tile'>
-           <img :src="tiles_col.texturePath" class="tile-img" v-on:click="tileClicked(tiles_row_id,tiles_col_id)"> 
-        </td>
-      </tr>
-    </table>
   </div>
 </template>
 
@@ -61,5 +63,20 @@ table {
 
 .tile-img {
   display: block;
+}
+
+.main {
+  height: 800px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map {
+  max-width: 50%;
+  max-height: 100%;
+  overflow: scroll;
+  background-color: black;
 }
 </style>
