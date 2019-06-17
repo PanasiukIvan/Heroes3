@@ -49,6 +49,15 @@ export class ArtifactObject extends ObjectPreference {
     }
 }
 
+export class CharacterObject extends ObjectPreference {
+    onInteraction : Function;
+
+    constructor(name: string, width: number, height: number, texturePath: string, onInteraction: Function) {
+        super(name, width, height, true, texturePath);
+        this.onInteraction = onInteraction;
+    }
+}
+
 let objectPreferences = [
     new TerrainObject("tree", 1, 1, require('@/assets/terrain/tree.png')),
     new BuildingObject("wood_warehouse", 2, 2, require('@/assets/buildings/Warehouse_of_Wood.gif')),
