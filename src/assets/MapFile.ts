@@ -181,7 +181,8 @@ map1.objects = [
     new GameObject("tree_128",30,6,objectPreferences[0]),
     new GameObject("tree_129",30,7,objectPreferences[0]),
     new GameObject("tree_130",31,5,objectPreferences[0]),
-    new GameObject("tree_131",31,6,objectPreferences[0])
+    new GameObject("tree_131",31,6,objectPreferences[0]),
+    new GameObject("ore_warehouse_1", 27,27,objectPreferences[6])
 ];
 
 export default map1;

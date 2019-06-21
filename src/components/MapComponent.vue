@@ -34,16 +34,24 @@ export default class MapComponent extends Vue {
   private _tileSize = GameConfig.tileTextureSize; 
   private objects: Array<GameObject> = Array.from(this.gameMap.objects.values());
 
+  constructor() {
+    super();
+    this.gameMap.subscribeOnAdd(this.addObject);
+    this.gameMap.subscribeOnRemove(this.removeObject);
+  }
+
   private tileClicked(row: number, col: number) {
     console.log(this.objects);
     console.log("Tile [" + row + "," + col + "] clicked");
+
   };
 
   private objectClicked(object: any) {
     console.log(object.index + "(" + object.posX + "," + object.posY + ") clicked");
+    this.gameMap.interactWithObj(object);
   };
 
-  private removeObject(object: GameObject) {
+  public removeObject(object: GameObject) {
     let index = this.objects.indexOf(object);
     if (index > -1) {
       this.objects.splice(index, 1);
@@ -51,12 +59,13 @@ export default class MapComponent extends Vue {
     }
   }
 
-  private addObject(object: GameObject) {
+  public addObject(object: GameObject) {
     this.objects.push(object);
     console.log("MapComponent: add to objects: " + object);
   }
 
   private onTest() {
+    console.log(this.gameMap.player.res_ore);
   }
 
 }
