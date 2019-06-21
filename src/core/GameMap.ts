@@ -1,6 +1,7 @@
 import {TilePreference, tilePreferences} from "./resources/TilesPreferences";
 import {GameObject} from "./resources/ObjectPreferences";
 import {GameConfig} from "./resources/GameConfig";
+import { Player } from './Player';
 
 export class GameMap {
     width: number;
@@ -8,6 +9,10 @@ export class GameMap {
     tilesMap: Array<Array<TilePreference>> = [];
     movementMap: Array<Array<number>> = [];
     objects : Map<string, GameObject> = new Map([]);                             // map <object_id, object>
+    objectRemovedSubscribers : Array<any> = [];                                 
+    objectAddedSubscribers : Array<any> = [];
+    player : Player = new Player([], this);
+    day : number = 0;  // Currend day of week
 
     constructor(mapFile: any) {
         console.log("Initiating Game Map object");
@@ -17,6 +22,36 @@ export class GameMap {
         this._loadObjects(mapFile.objects);
         
     };
+
+    public subscribeOnRemove(callback: Function) {
+        this.objectRemovedSubscribers.push(callback);
+    }
+
+    public subscribeOnAdd(callback: Function) {
+        this.objectAddedSubscribers.push(callback);
+    }
+
+    public addObject(obj : GameObject) {
+        this.objects.set(obj.index, obj);
+        this.objectAddedSubscribers.forEach((x) => {
+            x(obj);
+        })
+    }
+
+    public removeObj(obj : GameObject) {
+        if (this.objects.has(obj.index)) {
+            this.objects.delete(obj.index);
+            this.objectRemovedSubscribers.forEach((x) => {
+                x(obj);
+            })
+        }
+    }
+
+    public interactWithObj(obj: GameObject) {
+        console.log("Interaction with object " + obj.index + " started");
+        console.log(obj);
+        obj.onInteractionRun(this);
+    }
 
     private _loadTiles(tiles : Array<Array<number>>) {
         this.tilesMap = this._createArray2D(this.width, this.height);
@@ -36,12 +71,12 @@ export class GameMap {
         objects.forEach((obj) => {
             this.objects.set(obj.index, obj);
             // if object is interactive (item, building, npc) mark tiles as occupied
-            // if (obj.preferences.isInteractive) {
-            //     this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_OCCUPIED);
-            // } else {
-            //     // if object is interactive (item, building, npc) mark tiles as cannot walk
-            //     this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_CANNOT_WALK);
-            // }
+            if (obj.preferences.isInteractive) {
+                this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_OCCUPIED);
+            } else {
+                // if object is interactive (item, building, npc) mark tiles as cannot walk
+                this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_CANNOT_WALK);
+            }
         })
     }
 
@@ -59,6 +94,17 @@ export class GameMap {
             for (let j=posY; j < posY + height; j++) {
                 this.movementMap[i][j] = value;
             }
+        }
+    }
+
+    public nextTurn() {
+        this.day += 1;
+        this.day %= 7;
+        console.log("Day " + this.day + " started");
+        this.player.onTurnEnds();
+        if (this.day == 0) {
+            console.log("Next week  started, resources obtained");
+            this.player.onWeekEnds();
         }
     }
 }
