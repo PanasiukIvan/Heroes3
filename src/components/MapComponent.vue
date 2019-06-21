@@ -12,6 +12,7 @@
           </td>
         </tr>
       </table>
+      <button v-on:click="onTest()">test</button>
     </div>
   </div>
 </template>
@@ -19,7 +20,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import {GameMap} from '@/core/GameMap';
-import {GameObject} from '@/core/resources/ObjectPreferences';
+import {GameObject, objectPreferences} from '@/core/resources/ObjectPreferences';
 import {GameConfig} from '@/core/resources/GameConfig';
 import map1 from '@/assets/MapFile.ts';
 
@@ -41,6 +42,23 @@ export default class MapComponent extends Vue {
   private objectClicked(object: any) {
     console.log(object.index + "(" + object.posX + "," + object.posY + ") clicked");
   };
+
+  private removeObject(object: GameObject) {
+    let index = this.objects.indexOf(object);
+    if (index > -1) {
+      this.objects.splice(index, 1);
+      console.log("MapComponent: removed from objects: " + object);
+    }
+  }
+
+  private addObject(object: GameObject) {
+    this.objects.push(object);
+    console.log("MapComponent: add to objects: " + object);
+  }
+
+  private onTest() {
+  }
+
 }
 </script>
 
