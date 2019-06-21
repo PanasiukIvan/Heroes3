@@ -82,7 +82,7 @@ let objectPreferences = [
         console.log("ore warhause activated");
         if ((self as any).owned != true) {
             map.player.res_ore += 50;
-            map.player.income_res_tree += 50;
+            map.player.income_res_ore += 50;
             (self as any).owned = true;
         }
     }),

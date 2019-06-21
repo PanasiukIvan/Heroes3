@@ -23,6 +23,11 @@ export class Player {
     }
 
     public onTurnEnds() {
+        this.heroes.forEach((hero) => hero.onTurnEnds());
+    }
+
+    public onWeekEnds() {
+        console.log(this);
         this.res_tree += this.income_res_tree;
         this.res_ore += this.income_res_ore;
         this.res_gold += this.income_res_gold;

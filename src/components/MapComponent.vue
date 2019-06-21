@@ -13,6 +13,7 @@
         </tr>
       </table>
       <button v-on:click="onTest()">test</button>
+      <button v-on:click="onTurnEnds()">end turn</button>
     </div>
   </div>
 </template>
@@ -66,6 +67,10 @@ export default class MapComponent extends Vue {
 
   private onTest() {
     console.log(this.gameMap.player.res_ore);
+  }
+
+    private onTurnEnds() {
+    this.gameMap.nextTurn();
   }
 
 }

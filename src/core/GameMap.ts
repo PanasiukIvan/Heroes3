@@ -12,6 +12,7 @@ export class GameMap {
     objectRemovedSubscribers : Array<any> = [];                                 
     objectAddedSubscribers : Array<any> = [];
     player : Player = new Player([], this);
+    day : number = 0;  // Currend day of week
 
     constructor(mapFile: any) {
         console.log("Initiating Game Map object");
@@ -93,6 +94,17 @@ export class GameMap {
             for (let j=posY; j < posY + height; j++) {
                 this.movementMap[i][j] = value;
             }
+        }
+    }
+
+    public nextTurn() {
+        this.day += 1;
+        this.day %= 7;
+        console.log("Day " + this.day + " started");
+        this.player.onTurnEnds();
+        if (this.day == 0) {
+            console.log("Next week  started, resources obtained");
+            this.player.onWeekEnds();
         }
     }
 }
