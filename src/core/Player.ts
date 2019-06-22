@@ -1,5 +1,6 @@
 import {CharacterObject} from "./resources/ObjectPreferences"; 
 import {GameMap} from "./GameMap";
+import { GameConfig } from './resources/GameConfig';
 
 export class Player {
     gameMap : GameMap;
@@ -12,6 +13,7 @@ export class Player {
     income_res_ore : number = 0;
     income_res_mercury : number = 0;
     income_res_gold : number = 0;
+    PF : any = require("pathfinding");
 
     heroes : Array<Hero>;
     activeHero : Hero;
@@ -39,6 +41,46 @@ export class Player {
     // public moveHero(destX : number, destY : number) : HeroMovement {
 
     // }
+
+    public findPath(destX: number, destY: number) {
+        let finder : any = new this.PF.AStarFinder();;
+        let grid = [];
+        for (let i=0; i< this.gameMap.movementMap.length; i++) {
+            grid.push([] as number[]);
+            for (let j=0; j<this.gameMap.movementMap[i].length; j++) {
+                let status = (this.gameMap.movementMap[i][j] == GameConfig.TILE_CANNOT_WALK || this.gameMap.movementMap[i][j] == GameConfig.TILE_OCCUPIED) ? 1 : 0;  
+                grid[i].push(status);
+            }
+        };
+        let gridobj = new this.PF.Grid(grid);
+        let path = finder.findPath(this.heroes[0].posX, this.heroes[0].posY, destX, destY, gridobj);
+        console.log(path)
+        let pathObj = new HeroMovement();
+        if (path.length == 0) {
+            pathObj.isPossible = false;
+        } else {
+            pathObj.isPossible = true;
+            for (let i = 1; i < path.length - 1; i++) {
+                if (pathObj.totalEnergy + this.gameMap.movementMap[path[i][0]][path[i][1]] <= this.heroes[0].movepoints) {
+                    pathObj.pathToLand.push(path[i]);
+                    pathObj.totalEnergy += this.gameMap.movementMap[path[i][0]][path[i][1]];
+                } else {
+                    pathObj.restOfPath.push(path[i]);
+                    pathObj.totalEnergy += this.gameMap.movementMap[path[i][0]][path[i][1]];
+                }
+            }
+            let last = path.pop();
+            pathObj.destX = last[0];
+            pathObj.destY = last[1];
+            if (pathObj.totalEnergy + this.gameMap.movementMap[last[0]][last[1]] <= this.heroes[0].movepoints) {
+                pathObj.landAtX = last[0];
+                pathObj.landAtY = last[1];
+                pathObj.totalEnergy += this.gameMap.movementMap[last[0]][last[1]];
+            }
+        }
+
+        return pathObj;
+    }
 }
 
 export class Hero {
@@ -66,4 +108,5 @@ export class HeroMovement {
     pathToLand : Array<Array<number>> = [];
     restOfPath : Array<Array<number>> = [];
     isPossible : boolean = false;                       // is it possible to reach destination
+    totalEnergy : number = 0;
 }

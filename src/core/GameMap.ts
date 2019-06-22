@@ -86,6 +86,8 @@ export class GameMap {
         this.objects.set(obj.index, obj)
         this.player_id = obj.index;
         let hero : Hero = new Hero(obj.preferences);
+        hero.posX = obj.posX;
+        hero.posY = obj.posY;
         this.player = new Player([hero], this);
     }
 

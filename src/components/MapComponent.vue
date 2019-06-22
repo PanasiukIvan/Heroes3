@@ -67,8 +67,10 @@ export default class MapComponent extends Vue {
   }
 
   private tileClicked(row: number, col: number) {
-    console.log(this.objects);
-    console.log("Tile [" + row + "," + col + "] clicked");
+    console.log("Tile [" + col + "," + row + "] clicked");
+
+    let path = this.gameMap.player.findPath(col,row);
+    this.drowPath(path);
 
   };
 
@@ -119,15 +121,16 @@ export default class MapComponent extends Vue {
   }
 
   private onTest() {
-    let hm = new HeroMovement();
-    hm.pathToLand.push([0,0]);
-    hm.pathToLand.push([1,1]);
-    hm.pathToLand.push([2,1]);
-    hm.destX = 3;
-    hm.destY = 1;
-    hm.landAtX = 3;
-    hm.landAtY = 1;
-    this.drowPath(hm); 
+    // let hm = new HeroMovement();
+    // hm.pathToLand.push([0,0]);
+    // hm.pathToLand.push([1,1]);
+    // hm.pathToLand.push([2,1]);
+    // hm.destX = 3;
+    // hm.destY = 1;
+    // hm.landAtX = 3;
+    // hm.landAtY = 1;
+    // this.drowPath(hm); 
+    this.gameMap.player.findPath(5,5);
   }
 
     private onTurnEnds() {
