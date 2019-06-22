@@ -54,6 +54,7 @@ import {GameConfig} from '@/core/resources/GameConfig';
 import map1 from '@/assets/MapFile.ts';
 import { ArrayPropsDefinition } from 'vue/types/options';
 import { HeroMovement } from '@/core/Player';
+import { config } from '@vue/test-utils';
 
 @Component
 export default class MapComponent extends Vue {
@@ -145,7 +146,18 @@ export default class MapComponent extends Vue {
   }
 
   private onTest() {
-    this.gameMap.removeObj(this.gameMap.objects.get("player"));
+    let test_str = "";
+    for (let i=0; i<this.gameMap.movementMap.length; i++) {
+      for (let j=0; j<this.gameMap.movementMap[i].length; j++) {
+        let x = this.gameMap.movementMap[i][j] > 0 ? "O" : "X";
+        if (this.gameMap.player.heroes[0].posX == i && this.gameMap.player.heroes[0].posY == j) {
+          x = 'V';
+        }
+        test_str = test_str + x + " ";
+      }
+      test_str += "\n";
+    }
+    console.log(test_str);
   }
 
     private onTurnEnds() {
