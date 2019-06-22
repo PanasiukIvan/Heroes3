@@ -5,6 +5,23 @@
       <div class='obj' v-for="obj in objects" style="position: relative; width: 0; height: 0" v-on:click="objectClicked(obj)">
         <img alt="obj" :src="obj.preferences.texturePath" style="position: absolute" v-bind:style="{ left: obj.posX*32 + 'px', top: obj.posY*32 + 'px' }">
       </div>
+
+      <div class='path' v-for="path in path_green" style="position: relative; width: 0; height: 0">
+        <img alt="path" src="@/assets/ui/path_green.png" style="position: absolute" v-bind:style="{ left: path[0]*32 + 'px', top: path[1]*32 + 'px' }">
+
+      </div>
+      <div class='path' v-for="path in path_green_end" style="position: relative; width: 0; height: 0">
+        <img alt="path" src="@/assets/ui/path_green_end.png" style="position: absolute" v-bind:style="{ left: path[0]*32 + 'px', top: path[1]*32 + 'px' }">
+
+      </div>
+      <div class='path' v-for="path in path_red" style="position: relative; width: 0; height: 0">
+        <img alt="path" src="@/assets/ui/path_red.png" style="position: absolute" v-bind:style="{ left: path[0]*32 + 'px', top: path[1]*32 + 'px' }">
+
+      </div>
+      <div class='path' v-for="path in path_red_end" style="position: relative; width: 0; height: 0">
+        <img alt="path" src="@/assets/ui/path_red_end.png" style="position: absolute" v-bind:style="{ left: path[0]*32 + 'px', top: path[1]*32 + 'px' }">
+
+      </div>
       <table>
         <tr v-for="(tiles_row, tiles_row_id) in gameMap.tilesMap">
           <td v-for="(tiles_col, tiles_col_id) in tiles_row" class='tile'>
@@ -24,6 +41,7 @@ import {GameMap} from '@/core/GameMap';
 import {GameObject, objectPreferences} from '@/core/resources/ObjectPreferences';
 import {GameConfig} from '@/core/resources/GameConfig';
 import map1 from '@/assets/MapFile.ts';
+import { ArrayPropsDefinition } from 'vue/types/options';
 
 @Component
 export default class MapComponent extends Vue {
@@ -34,6 +52,12 @@ export default class MapComponent extends Vue {
   private gameMap: GameMap = new GameMap(map1);
   private _tileSize = GameConfig.tileTextureSize; 
   private objects: Array<GameObject> = Array.from(this.gameMap.objects.values());
+
+  // path drowing
+  private path_green : Array<Array<number>> = [];
+  private path_red : Array<Array<number>> = [];
+  private path_green_end : Array<Array<number>> = [];
+  private path_red_end : Array<Array<number>> = [];
 
   constructor() {
     super();
@@ -66,7 +90,12 @@ export default class MapComponent extends Vue {
   }
 
   private onTest() {
-    console.log(this.gameMap.player.res_ore);
+    this.path_green.push([0,0]);
+    this.path_green.push([1,1]);
+    this.path_green.push([2,1]);
+    this.path_red.push([2,2]);
+    this.path_red.push([2,3]);
+    this.path_red_end.push([2,4]);
   }
 
     private onTurnEnds() {
