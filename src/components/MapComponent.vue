@@ -4,12 +4,32 @@
     <h3>Player info</h3>
      <ul>
       <li>Gold: {{gameMap.player.res_gold}}</li>
-      <li>Wood: {{gameMap.player.res_wood}}</li>
+      <li>Wood: {{gameMap.player.res_tree}}</li>
       <li>Ore: {{gameMap.player.res_ore}}</li>
       <li>Mercury: {{gameMap.player.res_mercury}}</li>
       <li>Movements point: {{Math.max(gameMap.player.heroes[0].movepoints, 0)}} / {{gameMap.player.heroes[0].maxMovepoints}}</li>
     </ul>
     <button v-on:click="onTurnEnds()">end turn</button>
+    <div>
+      <p class='desc'>Head: </p>
+      <p class='desc' v-if="gameMap.player.slots['head'] != null">{{gameMap.player.slots['head'].preferences.name}}</p>
+      <p class='desc' v-else>Empty</p>
+    </div>
+    <div>
+      <p class='desc'>Body: </p>
+      <p class='desc' v-if="gameMap.player.slots['body'] != null">{{gameMap.player.slots['body'].preferences.name}}</p>
+      <p class='desc' v-else>Empty</p>
+    </div>
+    <div>
+      <p class='desc'>Ring 1: </p>
+      <p class='desc' v-if="gameMap.player.slots['ring1'] != null">{{gameMap.player.slots['ring1'].preferences.name}}</p>
+      <p class='desc' v-else>Empty</p>
+    </div>
+    <div>
+      <p class='desc'>Ring 2: </p>
+      <p class='desc' v-if="gameMap.player.slots['ring2'] != null">{{gameMap.player.slots['ring2'].preferences.name}}</p>
+      <p class='desc' v-else>Empty</p>
+    </div>
     <div>
       <div class='item-desc' v-for="artifact in gameMap.player.artifacts">
         <p>{{artifact.preferences.name}}</p>
@@ -47,7 +67,7 @@
           </td>
         </tr>
       </table>
-      <button v-on:click="onTest()">test</button>
+      <!-- <button v-on:click="onTest()">test</button> -->
     </div>
   </div>
 </div>
@@ -220,5 +240,10 @@ table {
 
 .item-desc {
   display: flex;
+}
+
+.desc {
+  display: inline-block;
+  margin-right: 1em;
 }
 </style>

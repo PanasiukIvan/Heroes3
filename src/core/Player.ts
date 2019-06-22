@@ -54,6 +54,10 @@ export class Player {
                 if (this.slots['ring1'] == null || this.slots['ring2'] == null) {
                     this.equipArtifact(artifact);
                 }
+            } else {
+                if (this.slots[(artifact.preferences as ArtifactObject).slot] == null) {
+                    this.equipArtifact(artifact);
+                }
             }
         }
     }
@@ -64,7 +68,7 @@ export class Player {
                 this.slots['ring2'] = artifact; 
             } else {
                 if (this.slots['ring1'] != null) {
-                    this.slots['ring1'].preference.onUnequip(this);
+                    this.slots['ring1'].preferences.onUnequip(this);
                     this.slots['ring1'].equiped = "false";
                 }
                 this.slots['ring1'] = artifact; 
@@ -86,13 +90,13 @@ export class Player {
             (artifact as any).equiped = "false";
             if ((artifact.preferences as ArtifactObject).slot == 'ring') {
                 if (this.slots['ring1'] == artifact) {
-                    this.slots['ring1'] == null;
+                    this.slots['ring1'] = null;
                 }
                 if (this.slots['ring2'] == artifact) {
-                    this.slots['ring2'] == null;
+                    this.slots['ring2'] = null;
                 }
             } else {
-                this.slots[(artifact.preferences as ArtifactObject).slot] == null;
+                this.slots[(artifact.preferences as ArtifactObject).slot] = null;
             }
             (artifact.preferences as ArtifactObject).onUnequip(this);
         }

@@ -101,6 +101,76 @@ ring_of_gems.onUnequip = (player : Player) => {
 
 ring_of_gems.slot = 'ring';
 
+
+let ring_of_wayfarer = new ArtifactObject("Ring of the Wayfarer", 1, 1, require('@/assets/artifacts/Artifact_Ring_of_the_Wayfarer.gif'), (map: GameMap, self: GameObject) => {
+    console.log("Ring of Wayfarer activated");
+    map.player.pickUpArtrifact(self);
+    map.removeObj(self);
+});
+
+ring_of_wayfarer.onEquip = (player : Player) => {
+    console.log("Ring of Wayfarer equiped");
+}
+
+ring_of_wayfarer.onUnequip = (player : Player) => {
+    console.log("Ring of Wayfarer unequiped");
+}
+
+ring_of_wayfarer.slot = 'ring';
+
+
+let ring_of_sulfur = new ArtifactObject("Ring of Sulfur", 1, 1, require('@/assets/artifacts/Artifact_Eversmoking_Ring_of_Sulfur.gif'), (map: GameMap, self: GameObject) => {
+    console.log("Ring of Sulfur activated");
+    map.player.pickUpArtrifact(self);
+    map.removeObj(self);
+});
+
+ring_of_sulfur.onEquip = (player : Player) => {
+    player.income_res_mercury += 25;
+    console.log("Ring of Sulfur equiped");
+}
+
+ring_of_sulfur.onUnequip = (player : Player) => {
+    player.income_res_mercury -= 25;
+    console.log("Ring of Sulfur unequiped");
+}
+
+ring_of_sulfur.slot = 'ring';
+
+let skull_helmet = new ArtifactObject("Skull Helmet", 1, 1, require('@/assets/artifacts/Artifact_Skull_Helmet.gif'), (map: GameMap, self: GameObject) => {
+    console.log("Skull Helmet activated");
+    map.player.pickUpArtrifact(self);
+    map.removeObj(self);
+});
+
+skull_helmet.onEquip = (player : Player) => {
+    console.log("Skull Helmet equiped");
+}
+
+skull_helmet.onUnequip = (player : Player) => {
+    console.log("Skull Helmet unequiped");
+}
+
+skull_helmet.slot = 'head';
+
+
+let crystal_cloak = new ArtifactObject("Crystal Cloak", 1, 1, require('@/assets/artifacts/Artifact_Everflowing_Crystal_Cloak.gif'), (map: GameMap, self: GameObject) => {
+    console.log("Crystal Cloak activated");
+    map.player.pickUpArtrifact(self);
+    map.removeObj(self);
+});
+
+crystal_cloak.onEquip = (player : Player) => {
+    console.log("Crystal Cloak equiped");
+}
+
+crystal_cloak.onUnequip = (player : Player) => {
+    console.log("Crystal Cloak unequiped");
+}
+
+crystal_cloak.slot = 'body';
+
+
 let objectPreferences = [
     new TerrainObject("tree", 1, 1, require('@/assets/terrain/tree.png')),
     new BuildingObject("wood_warehouse", 2, 2, require('@/assets/buildings/Warehouse_of_Wood.gif'),(map: GameMap, self: GameObject) => {
@@ -146,7 +216,7 @@ let objectPreferences = [
     }),
 
     new PlayerObject("player", 1, 1, require('@/assets/characters/Pikeman_(HotA)_(adventure_map).gif'), (map: GameMap, self: GameObject) => {}),
-    ring_of_gems
+    ring_of_gems, ring_of_sulfur, ring_of_wayfarer, skull_helmet, crystal_cloak
 ]
 
 export {objectPreferences};
