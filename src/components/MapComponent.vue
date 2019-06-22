@@ -1,9 +1,25 @@
 <template>
   <div class = "main">
     <div class="map">
-      <h1>{{ msg }}</h1>
       <div class='obj' v-for="obj in objects" style="position: relative; width: 0; height: 0" v-on:click="objectClicked(obj)">
         <img alt="obj" :src="obj.preferences.texturePath" style="position: absolute" v-bind:style="{ left: obj.posX*32 + 'px', top: obj.posY*32 + 'px' }">
+      </div>
+
+      <div class='path' v-for="path in path_green" style="position: relative; width: 0; height: 0">
+        <img alt="path" src="@/assets/ui/path_green.png" style="position: absolute" v-bind:style="{ left: path[0]*32 + 'px', top: path[1]*32 + 'px' }">
+
+      </div>
+      <div class='path' v-for="path in path_green_end" style="position: relative; width: 0; height: 0">
+        <img alt="path" src="@/assets/ui/path_green_end.png" style="position: absolute" v-bind:style="{ left: path[0]*32 + 'px', top: path[1]*32 + 'px' }">
+
+      </div>
+      <div class='path' v-for="path in path_red" style="position: relative; width: 0; height: 0">
+        <img alt="path" src="@/assets/ui/path_red.png" style="position: absolute" v-bind:style="{ left: path[0]*32 + 'px', top: path[1]*32 + 'px' }">
+
+      </div>
+      <div class='path' v-for="path in path_red_end" style="position: relative; width: 0; height: 0">
+        <img alt="path" src="@/assets/ui/path_red_end.png" style="position: absolute" v-bind:style="{ left: path[0]*32 + 'px', top: path[1]*32 + 'px' }">
+
       </div>
       <table>
         <tr v-for="(tiles_row, tiles_row_id) in gameMap.tilesMap">
@@ -24,6 +40,8 @@ import {GameMap} from '@/core/GameMap';
 import {GameObject, objectPreferences} from '@/core/resources/ObjectPreferences';
 import {GameConfig} from '@/core/resources/GameConfig';
 import map1 from '@/assets/MapFile.ts';
+import { ArrayPropsDefinition } from 'vue/types/options';
+import { HeroMovement } from '@/core/Player';
 
 @Component
 export default class MapComponent extends Vue {
@@ -35,6 +53,14 @@ export default class MapComponent extends Vue {
   private _tileSize = GameConfig.tileTextureSize; 
   private objects: Array<GameObject> = Array.from(this.gameMap.objects.values());
 
+  // path drowing
+  private path_green : Array<Array<number>> = [];
+  private path_red : Array<Array<number>> = [];
+  private path_green_end : Array<Array<number>> = [];
+  private path_red_end : Array<Array<number>> = [];
+  private clickedRow : number = -1;
+  private clickedCol : number = -1;
+
   constructor() {
     super();
     this.gameMap.subscribeOnAdd(this.addObject);
@@ -42,9 +68,19 @@ export default class MapComponent extends Vue {
   }
 
   private tileClicked(row: number, col: number) {
-    console.log(this.objects);
-    console.log("Tile [" + row + "," + col + "] clicked");
-
+    console.log("Tile [" + col + "," + row + "] clicked");
+    if (col == this.clickedCol && row == this.clickedRow) {
+      console.log("Moving player");
+      let path = this.gameMap.player.findPath(col,row);
+      this.clearPath();
+      this.gameMap.movePlayer(path);
+    } else {
+      let path = this.gameMap.player.findPath(col,row);
+      this.drowPath(path);
+      this.clickedCol = path.destX;
+      this.clickedRow = path.destY;
+    }
+    
   };
 
   private objectClicked(object: any) {
@@ -60,13 +96,44 @@ export default class MapComponent extends Vue {
     }
   }
 
+  private clearPath() {
+    while(this.path_green.length > 0) {
+      this.path_green.pop();
+    }
+    while(this.path_red.length > 0) {
+      this.path_red.pop();
+    }
+    while(this.path_green_end.length > 0) {
+      this.path_green_end.pop();
+    }
+    while(this.path_red_end.length > 0) {
+      this.path_red_end.pop();
+    }
+  }
+
+  public drowPath(object: HeroMovement) {
+    this.clearPath()
+    object.pathToLand.forEach((x) => {
+      this.path_green.push(x);
+    })
+    object.restOfPath.forEach((x) => {
+      this.path_red.push(x);
+    })
+
+    if (object.destX == object.landAtX && object.destY == object.landAtY) {
+      this.path_green_end.push([object.destX, object.destY]);
+    } else {
+      this.path_red_end.push([object.destX, object.destY]);
+    }
+  }
+
   public addObject(object: GameObject) {
     this.objects.push(object);
     console.log("MapComponent: add to objects: " + object);
   }
 
   private onTest() {
-    console.log(this.gameMap.player.res_ore);
+    this.gameMap.removeObj(this.gameMap.objects.get("player"));
   }
 
     private onTurnEnds() {
@@ -110,5 +177,9 @@ table {
   max-height: 100%;
   overflow: scroll;
   background-color: black;
+}
+
+.path {
+  pointer-events: none;
 }
 </style>

@@ -68,6 +68,14 @@ export class CharacterObject extends ObjectPreference {
     }
 }
 
+export class PlayerObject extends ObjectPreference {
+
+    constructor(name: string, width: number, height: number, texturePath: string, onInteraction: Function) {
+        super(name, width, height, true, texturePath);
+        this.onInteraction = onInteraction;
+    }
+}
+
 let objectPreferences = [
     new TerrainObject("tree", 1, 1, require('@/assets/terrain/tree.png')),
     new BuildingObject("wood_warehouse", 2, 2, require('@/assets/buildings/Warehouse_of_Wood.gif'),(map: GameMap, self: GameObject) => {
@@ -110,7 +118,9 @@ let objectPreferences = [
         console.log("Ore cart activated");
         map.player.res_ore += 100;
         map.removeObj(self);
-    })
+    }),
+
+    new PlayerObject("player", 1, 1, require('@/assets/characters/Pikeman_(HotA)_(adventure_map).gif'), (map: GameMap, self: GameObject) => {})
 ]
 
 export {objectPreferences};

@@ -1,7 +1,7 @@
 import {TilePreference, tilePreferences} from "./resources/TilesPreferences";
 import {GameObject} from "./resources/ObjectPreferences";
 import {GameConfig} from "./resources/GameConfig";
-import { Player } from './Player';
+import { Player, Hero, HeroMovement } from './Player';
 
 export class GameMap {
     width: number;
@@ -12,7 +12,9 @@ export class GameMap {
     objectRemovedSubscribers : Array<any> = [];                                 
     objectAddedSubscribers : Array<any> = [];
     player : Player = new Player([], this);
+    player_id : string = "";
     day : number = 0;  // Currend day of week
+
 
     constructor(mapFile: any) {
         console.log("Initiating Game Map object");
@@ -20,6 +22,7 @@ export class GameMap {
         this.height = mapFile.height;
         this._loadTiles(mapFile.tiles);
         this._loadObjects(mapFile.objects);
+        this._loadHero(mapFile.hero);
         
     };
 
@@ -36,6 +39,7 @@ export class GameMap {
         this.objectAddedSubscribers.forEach((x) => {
             x(obj);
         })
+        this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_OCCUPIED);
     }
 
     public removeObj(obj : GameObject) {
@@ -49,8 +53,35 @@ export class GameMap {
 
     public interactWithObj(obj: GameObject) {
         console.log("Interaction with object " + obj.index + " started");
-        console.log(obj);
-        obj.onInteractionRun(this);
+        let closeCells = [];
+        for (let i=0; i<obj.preferences.width; i++) {
+            for (let j=0; j<obj.preferences.width; j++) {
+                closeCells.push([obj.posX + i + 1, obj.posY + j + 1]);
+                closeCells.push([obj.posX + i + 1, obj.posY + j - 1]);
+                closeCells.push([obj.posX + i + 1, obj.posY + j]);
+                closeCells.push([obj.posX + i - 1, obj.posY + j + 1]);
+                closeCells.push([obj.posX + i - 1, obj.posY + j - 1]);
+                closeCells.push([obj.posX + i - 1, obj.posY + j]);
+                closeCells.push([obj.posX + i, obj.posY + j + 1]);
+                closeCells.push([obj.posX + i, obj.posY + j - 1]);
+                closeCells.push([obj.posX + i, obj.posY + j]);
+            }
+        }
+        for (let i=0; i<closeCells.length; i++) {
+            if (closeCells[i][0] == this.player.heroes[0].posX && closeCells[i][1] == this.player.heroes[0].posY) {
+                console.log("interaction allowed");
+                obj.onInteractionRun(this);
+            }
+        } 
+    }
+
+    public movePlayer(path : HeroMovement) {
+            this.player.heroes[0].movepoints -= path.totalEnergy;
+            this.player.heroes[0].posX = path.landAtX;
+            this.player.heroes[0].posY = path.landAtY;
+            let player_obj : GameObject = this.objects.get("player") as GameObject;
+            player_obj.posX = path.landAtX;
+            player_obj.posY = path.landAtY;
     }
 
     private _loadTiles(tiles : Array<Array<number>>) {
@@ -80,6 +111,15 @@ export class GameMap {
         })
     }
 
+    private _loadHero(obj : GameObject) {
+        this.objects.set(obj.index, obj)
+        this.player_id = obj.index;
+        let hero : Hero = new Hero(obj.preferences);
+        hero.posX = obj.posX;
+        hero.posY = obj.posY;
+        this.player = new Player([hero], this);
+    }
+
     private _createArray2D (width: number, height: number): Array<Array<TilePreference>> {
         let array = new Array(width);
         for (let i=0; i<width; i++) {
@@ -96,6 +136,15 @@ export class GameMap {
             }
         }
     }
+
+        // replace all tiles in movement map in square with left corner in (posX, posY) with value
+        private _modifyMovementMapFree(posX: number, posY: number, width: number, height: number) {
+            for (let i = posX; i < posX + width; i++) {
+                for (let j=posY; j < posY + height; j++) {
+                    this.movementMap[i][j] = this.tilesMap[i][j].takesMp;
+                }
+            }
+        }
 
     public nextTurn() {
         this.day += 1;
