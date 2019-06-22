@@ -39,6 +39,7 @@ export class GameMap {
         this.objectAddedSubscribers.forEach((x) => {
             x(obj);
         })
+        this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_OCCUPIED);
     }
 
     public removeObj(obj : GameObject) {
@@ -52,8 +53,26 @@ export class GameMap {
 
     public interactWithObj(obj: GameObject) {
         console.log("Interaction with object " + obj.index + " started");
-        console.log(obj);
-        obj.onInteractionRun(this);
+        let closeCells = [];
+        for (let i=0; i<obj.preferences.width; i++) {
+            for (let j=0; j<obj.preferences.width; j++) {
+                closeCells.push([obj.posX + i + 1, obj.posY + j + 1]);
+                closeCells.push([obj.posX + i + 1, obj.posY + j - 1]);
+                closeCells.push([obj.posX + i + 1, obj.posY + j]);
+                closeCells.push([obj.posX + i - 1, obj.posY + j + 1]);
+                closeCells.push([obj.posX + i - 1, obj.posY + j - 1]);
+                closeCells.push([obj.posX + i - 1, obj.posY + j]);
+                closeCells.push([obj.posX + i, obj.posY + j + 1]);
+                closeCells.push([obj.posX + i, obj.posY + j - 1]);
+                closeCells.push([obj.posX + i, obj.posY + j]);
+            }
+        }
+        for (let i=0; i<closeCells.length; i++) {
+            if (closeCells[i][0] == this.player.heroes[0].posX && closeCells[i][1] == this.player.heroes[0].posY) {
+                console.log("interaction allowed");
+                obj.onInteractionRun(this);
+            }
+        } 
     }
 
     public movePlayer(path : HeroMovement) {
@@ -117,6 +136,15 @@ export class GameMap {
             }
         }
     }
+
+        // replace all tiles in movement map in square with left corner in (posX, posY) with value
+        private _modifyMovementMapFree(posX: number, posY: number, width: number, height: number) {
+            for (let i = posX; i < posX + width; i++) {
+                for (let j=posY; j < posY + height; j++) {
+                    this.movementMap[i][j] = this.tilesMap[i][j].takesMp;
+                }
+            }
+        }
 
     public nextTurn() {
         this.day += 1;
