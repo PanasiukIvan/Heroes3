@@ -183,7 +183,13 @@ map1.objects = [
     new GameObject("tree_129",30,7,objectPreferences[0]),
     new GameObject("tree_130",31,5,objectPreferences[0]),
     new GameObject("tree_131",31,6,objectPreferences[0]),
-    new GameObject("ore_cart_1", 27,27,objectPreferences[6])
+    new GameObject("ore_cart_1", 27,27,objectPreferences[6]),
+
+    new GameObject("ring_1", 6,4,objectPreferences[8]),
+    new GameObject("ring_2", 2,9,objectPreferences[9]),
+    new GameObject("ring_3", 21,12,objectPreferences[10]),
+    new GameObject("helmet_1", 13,12,objectPreferences[11]),
+    new GameObject("body_1", 16,16,objectPreferences[12])
 ];
 
 map1.hero = new GameObject("player", 4 , 4, objectPreferences[7]);

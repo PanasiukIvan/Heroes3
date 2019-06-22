@@ -129,7 +129,7 @@ export class GameMap {
     }
 
     // replace all tiles in movement map in square with left corner in (posX, posY) with value
-    private _modifyMovementMap(posX: number, posY: number, width: number, height: number, value: number) {
+    private _modifyMovementMap(posY: number, posX: number, width: number, height: number, value: number) {
         for (let i = posX; i < posX + width; i++) {
             for (let j=posY; j < posY + height; j++) {
                 this.movementMap[i][j] = value;
@@ -138,7 +138,7 @@ export class GameMap {
     }
 
         // replace all tiles in movement map in square with left corner in (posX, posY) with value
-        private _modifyMovementMapFree(posX: number, posY: number, width: number, height: number) {
+        private _modifyMovementMapFree(posY: number, posX: number, width: number, height: number) {
             for (let i = posX; i < posX + width; i++) {
                 for (let j=posY; j < posY + height; j++) {
                     this.movementMap[i][j] = this.tilesMap[i][j].takesMp;
