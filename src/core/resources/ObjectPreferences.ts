@@ -57,6 +57,12 @@ export class ArtifactObject extends ObjectPreference {
         super(name, width, height, true, texturePath);
         this.onInteraction = onInteraction;
     }
+
+    onEquip(player: Player) {};
+    onUnequip(player: Player) {};
+
+    slot: string = 'not equipable';
+    equiped: boolean = false;
     
 }
 
@@ -75,6 +81,25 @@ export class PlayerObject extends ObjectPreference {
         this.onInteraction = onInteraction;
     }
 }
+
+
+let ring_of_gems = new ArtifactObject("Ring of Gems", 1, 1, require('@/assets/artifacts/Artifact_Ring_of_Infinite_Gems.gif'), (map: GameMap, self: GameObject) => {
+    console.log("Ring of gems activated");
+    map.player.pickUpArtrifact(self);
+    map.removeObj(self);
+});
+
+ring_of_gems.onEquip = (player : Player) => {
+    player.income_res_gold += 25;
+    console.log("Ring of gem equiped");
+}
+
+ring_of_gems.onUnequip = (player : Player) => {
+    player.income_res_gold -= 25;
+    console.log("Ring of gem unequiped");
+}
+
+ring_of_gems.slot = 'ring';
 
 let objectPreferences = [
     new TerrainObject("tree", 1, 1, require('@/assets/terrain/tree.png')),
@@ -120,7 +145,8 @@ let objectPreferences = [
         map.removeObj(self);
     }),
 
-    new PlayerObject("player", 1, 1, require('@/assets/characters/Pikeman_(HotA)_(adventure_map).gif'), (map: GameMap, self: GameObject) => {})
+    new PlayerObject("player", 1, 1, require('@/assets/characters/Pikeman_(HotA)_(adventure_map).gif'), (map: GameMap, self: GameObject) => {}),
+    ring_of_gems
 ]
 
 export {objectPreferences};

@@ -10,6 +10,13 @@
       <li>Movements point: {{Math.max(gameMap.player.heroes[0].movepoints, 0)}} / {{gameMap.player.heroes[0].maxMovepoints}}</li>
     </ul>
     <button v-on:click="onTurnEnds()">end turn</button>
+    <div>
+      <div class='item-desc' v-for="artifact in gameMap.player.artifacts">
+        <p>{{artifact.preferences.name}}</p>
+        <button v-if="artifact.equiped == 'true'" v-on:click="gameMap.player.removeArtifact(artifact)">Unequip</button>
+        <button v-else v-on:click="gameMap.player.equipArtifact(artifact)">Equip</button>
+      </div>
+    </div>
   </div>
   <div class = "main">
     <div class="map">
@@ -209,5 +216,9 @@ table {
 .holder {
   display: flex;
   justify-content: space-around;
+}
+
+.item-desc {
+  display: flex;
 }
 </style>

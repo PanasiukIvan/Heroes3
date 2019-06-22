@@ -1,4 +1,4 @@
-import {CharacterObject} from "./resources/ObjectPreferences"; 
+import {CharacterObject, GameObject, ArtifactObject} from "./resources/ObjectPreferences"; 
 import {GameMap} from "./GameMap";
 import { GameConfig } from './resources/GameConfig';
 
@@ -14,6 +14,15 @@ export class Player {
     income_res_mercury : number = 0;
     income_res_gold : number = 0;
     PF : any = require("pathfinding");
+
+    slots : any = {
+        'head' : null,
+        'body' : null,
+        'ring1' : null,
+        'ring2' : null
+    }
+
+    artifacts : any = {};
 
     heroes : Array<Hero>;
     activeHero : Hero;
@@ -36,6 +45,57 @@ export class Player {
         this.res_mercury += this.income_res_mercury;
 
         this.heroes.forEach((hero) => hero.onTurnEnds());
+    }
+
+    public pickUpArtrifact(artifact : GameObject) {
+        if ((artifact.preferences as ArtifactObject).slot != 'not equipable') {
+            this.artifacts[artifact.index] = artifact;
+            if ((artifact.preferences as ArtifactObject).slot == 'ring') {
+                if (this.slots['ring1'] == null || this.slots['ring2'] == null) {
+                    this.equipArtifact(artifact);
+                }
+            }
+        }
+    }
+
+    public equipArtifact(artifact : GameObject) {
+        if ((artifact.preferences as ArtifactObject).slot == 'ring') {
+            if (this.slots['ring2'] == null) {
+                this.slots['ring2'] = artifact; 
+            } else {
+                if (this.slots['ring1'] != null) {
+                    this.slots['ring1'].preference.onUnequip(this);
+                    this.slots['ring1'].equiped = "false";
+                }
+                this.slots['ring1'] = artifact; 
+            }
+        } else {
+            if (this.slots[(artifact.preferences as ArtifactObject).slot] != null) {
+                this.slots[(artifact.preferences as ArtifactObject).slot].equiped = "false";
+                this.slots[(artifact.preferences as ArtifactObject).slot].preferences.onUnequip(this);
+            }
+            this.slots[(artifact.preferences as ArtifactObject).slot] = artifact;
+        }
+        (artifact as any).equiped = "true";
+        (artifact.preferences as ArtifactObject).onEquip(this);
+    }
+
+    public removeArtifact(artifact : GameObject) {
+        console.log(this.artifacts);
+        if ((artifact as any).equiped == "true") {
+            (artifact as any).equiped = "false";
+            if ((artifact.preferences as ArtifactObject).slot == 'ring') {
+                if (this.slots['ring1'] == artifact) {
+                    this.slots['ring1'] == null;
+                }
+                if (this.slots['ring2'] == artifact) {
+                    this.slots['ring2'] == null;
+                }
+            } else {
+                this.slots[(artifact.preferences as ArtifactObject).slot] == null;
+            }
+            (artifact.preferences as ArtifactObject).onUnequip(this);
+        }
     }
 
     // public moveHero(destX : number, destY : number) : HeroMovement {
