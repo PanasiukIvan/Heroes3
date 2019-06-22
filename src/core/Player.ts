@@ -59,10 +59,10 @@ export class Hero {
 }
 
 export class HeroMovement {
-    destX : number = 0;                         //destination of hero movement according to user input
-    destY : number = 0;  
-    landAtX : number = 0;                       // real destination (closest point to destination with respect to moving points)
-    landAtY : number = 0;
+    destX : number = -1;                         //destination of hero movement according to user input
+    destY : number = -1;  
+    landAtX : number = -1;                       // real destination (closest point to destination with respect to moving points)
+    landAtY : number = -1;
     pathToLand : Array<Array<number>> = [];
     restOfPath : Array<Array<number>> = [];
     isPossible : boolean = false;                       // is it possible to reach destination

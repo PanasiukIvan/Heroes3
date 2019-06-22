@@ -42,6 +42,7 @@ import {GameObject, objectPreferences} from '@/core/resources/ObjectPreferences'
 import {GameConfig} from '@/core/resources/GameConfig';
 import map1 from '@/assets/MapFile.ts';
 import { ArrayPropsDefinition } from 'vue/types/options';
+import { HeroMovement } from '@/core/Player';
 
 @Component
 export default class MapComponent extends Vue {
@@ -84,18 +85,49 @@ export default class MapComponent extends Vue {
     }
   }
 
+  public drowPath(object: HeroMovement) {
+    while(this.path_green.length > 0) {
+      this.path_green.pop();
+    }
+    while(this.path_red.length > 0) {
+      this.path_red.pop();
+    }
+    while(this.path_green_end.length > 0) {
+      this.path_green_end.pop();
+    }
+    while(this.path_red_end.length > 0) {
+      this.path_red_end.pop();
+    }
+    object.pathToLand.forEach((x) => {
+      this.path_green.push(x);
+    })
+    object.restOfPath.forEach((x) => {
+      this.path_red.push(x);
+    })
+
+    if (object.destX == object.landAtX && object.destY == object.landAtY) {
+      this.path_green_end.push([object.destX, object.destY]);
+    } else {
+      this.path_red_end.push([object.destX, object.destY]);
+      this.path_red_end.push([object.landAtX, object.landAtY]);
+    }
+  }
+
   public addObject(object: GameObject) {
     this.objects.push(object);
     console.log("MapComponent: add to objects: " + object);
   }
 
   private onTest() {
-    this.path_green.push([0,0]);
-    this.path_green.push([1,1]);
-    this.path_green.push([2,1]);
-    this.path_red.push([2,2]);
-    this.path_red.push([2,3]);
-    this.path_red_end.push([2,4]);
+    let hm = new HeroMovement();
+    hm.pathToLand.push([0,0]);
+    hm.pathToLand.push([1,1]);
+    hm.pathToLand.push([2,1]);
+    hm.destX = 3;
+    hm.destY = 1;
+    hm.landAtX = 3;
+    hm.landAtY = 1;
+    this.drowPath(hm); 
   }
 
     private onTurnEnds() {
