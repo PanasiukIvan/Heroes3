@@ -1,4 +1,16 @@
 <template>
+<div class="holder">
+  <div class="ui">
+    <h3>Player info</h3>
+     <ul>
+      <li>Gold: {{gameMap.player.res_gold}}</li>
+      <li>Wood: {{gameMap.player.res_wood}}</li>
+      <li>Ore: {{gameMap.player.res_ore}}</li>
+      <li>Mercury: {{gameMap.player.res_mercury}}</li>
+      <li>Movements point: {{Math.max(gameMap.player.heroes[0].movepoints, 0)}} / {{gameMap.player.heroes[0].maxMovepoints}}</li>
+    </ul>
+    <button v-on:click="onTurnEnds()">end turn</button>
+  </div>
   <div class = "main">
     <div class="map">
       <div class='obj' v-for="obj in objects" style="position: relative; width: 0; height: 0" v-on:click="objectClicked(obj)">
@@ -29,9 +41,9 @@
         </tr>
       </table>
       <button v-on:click="onTest()">test</button>
-      <button v-on:click="onTurnEnds()">end turn</button>
     </div>
   </div>
+</div>
 </template>
 
 <script lang="ts">
@@ -166,14 +178,13 @@ table {
 
 .main {
   height: 800px;
-  width: 100%;
+  width: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .map {
-  max-width: 50%;
   max-height: 100%;
   overflow: scroll;
   background-color: black;
@@ -181,5 +192,10 @@ table {
 
 .path {
   pointer-events: none;
+}
+
+.holder {
+  display: flex;
+  justify-content: space-around;
 }
 </style>

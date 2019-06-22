@@ -86,7 +86,7 @@ let objectPreferences = [
             (self as any).owned = true;
         }
     }),
-    new BuildingObject("ore_warehouse", 2, 2, require('@/assets/buildings/Warehouse_of_Ore.gif'),(map: GameMap, self: GameObject) => {
+    new BuildingObject("ore_warehouse", 2, 1, require('@/assets/buildings/Warehouse_of_Ore.gif'),(map: GameMap, self: GameObject) => {
         console.log("ore warhause activated");
         if ((self as any).owned != true) {
             map.player.res_ore += 50;
