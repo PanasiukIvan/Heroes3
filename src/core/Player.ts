@@ -54,7 +54,6 @@ export class Player {
         };
         let gridobj = new this.PF.Grid(grid);
         let path = finder.findPath(this.heroes[0].posX, this.heroes[0].posY, destX, destY, gridobj);
-        console.log(path)
         let pathObj = new HeroMovement();
         if (path.length == 0) {
             pathObj.isPossible = false;
@@ -66,7 +65,7 @@ export class Player {
                     pathObj.totalEnergy += this.gameMap.movementMap[path[i][0]][path[i][1]];
                 } else {
                     pathObj.restOfPath.push(path[i]);
-                    pathObj.totalEnergy += this.gameMap.movementMap[path[i][0]][path[i][1]];
+                    pathObj.totalEnergy += 10000;
                 }
             }
             let last = path.pop();
@@ -76,10 +75,18 @@ export class Player {
                 pathObj.landAtX = last[0];
                 pathObj.landAtY = last[1];
                 pathObj.totalEnergy += this.gameMap.movementMap[last[0]][last[1]];
+            } else {
+                if (pathObj.pathToLand.length > 0) {
+                    pathObj.landAtX = pathObj.pathToLand[pathObj.pathToLand.length - 1][0];
+                    pathObj.landAtY = pathObj.pathToLand[pathObj.pathToLand.length - 1][1];
+                } else {
+                    pathObj.landAtX = this.heroes[0].posX;
+                    pathObj.landAtY = this.heroes[0].posY;
+                }
             }
         }
-
-        return pathObj;
+        console.log(pathObj);
+        return pathObj
     }
 }
 

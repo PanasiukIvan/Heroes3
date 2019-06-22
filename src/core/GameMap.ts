@@ -1,7 +1,7 @@
 import {TilePreference, tilePreferences} from "./resources/TilesPreferences";
 import {GameObject} from "./resources/ObjectPreferences";
 import {GameConfig} from "./resources/GameConfig";
-import { Player, Hero } from './Player';
+import { Player, Hero, HeroMovement } from './Player';
 
 export class GameMap {
     width: number;
@@ -14,6 +14,7 @@ export class GameMap {
     player : Player = new Player([], this);
     player_id : string = "";
     day : number = 0;  // Currend day of week
+
 
     constructor(mapFile: any) {
         console.log("Initiating Game Map object");
@@ -53,6 +54,15 @@ export class GameMap {
         console.log("Interaction with object " + obj.index + " started");
         console.log(obj);
         obj.onInteractionRun(this);
+    }
+
+    public movePlayer(path : HeroMovement) {
+            this.player.heroes[0].movepoints -= path.totalEnergy;
+            this.player.heroes[0].posX = path.landAtX;
+            this.player.heroes[0].posY = path.landAtY;
+            let player_obj : GameObject = this.objects.get("player") as GameObject;
+            player_obj.posX = path.landAtX;
+            player_obj.posY = path.landAtY;
     }
 
     private _loadTiles(tiles : Array<Array<number>>) {

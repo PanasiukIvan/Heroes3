@@ -1,7 +1,6 @@
 <template>
   <div class = "main">
     <div class="map">
-      <h1>{{ msg }}</h1>
       <div class='obj' v-for="obj in objects" style="position: relative; width: 0; height: 0" v-on:click="objectClicked(obj)">
         <img alt="obj" :src="obj.preferences.texturePath" style="position: absolute" v-bind:style="{ left: obj.posX*32 + 'px', top: obj.posY*32 + 'px' }">
       </div>
@@ -59,6 +58,8 @@ export default class MapComponent extends Vue {
   private path_red : Array<Array<number>> = [];
   private path_green_end : Array<Array<number>> = [];
   private path_red_end : Array<Array<number>> = [];
+  private clickedRow : number = -1;
+  private clickedCol : number = -1;
 
   constructor() {
     super();
@@ -68,10 +69,18 @@ export default class MapComponent extends Vue {
 
   private tileClicked(row: number, col: number) {
     console.log("Tile [" + col + "," + row + "] clicked");
-
-    let path = this.gameMap.player.findPath(col,row);
-    this.drowPath(path);
-
+    if (col == this.clickedCol && row == this.clickedRow) {
+      console.log("Moving player");
+      let path = this.gameMap.player.findPath(col,row);
+      this.clearPath();
+      this.gameMap.movePlayer(path);
+    } else {
+      let path = this.gameMap.player.findPath(col,row);
+      this.drowPath(path);
+      this.clickedCol = path.destX;
+      this.clickedRow = path.destY;
+    }
+    
   };
 
   private objectClicked(object: any) {
@@ -87,7 +96,7 @@ export default class MapComponent extends Vue {
     }
   }
 
-  public drowPath(object: HeroMovement) {
+  private clearPath() {
     while(this.path_green.length > 0) {
       this.path_green.pop();
     }
@@ -100,6 +109,10 @@ export default class MapComponent extends Vue {
     while(this.path_red_end.length > 0) {
       this.path_red_end.pop();
     }
+  }
+
+  public drowPath(object: HeroMovement) {
+    this.clearPath()
     object.pathToLand.forEach((x) => {
       this.path_green.push(x);
     })
@@ -111,7 +124,6 @@ export default class MapComponent extends Vue {
       this.path_green_end.push([object.destX, object.destY]);
     } else {
       this.path_red_end.push([object.destX, object.destY]);
-      this.path_red_end.push([object.landAtX, object.landAtY]);
     }
   }
 
@@ -121,16 +133,7 @@ export default class MapComponent extends Vue {
   }
 
   private onTest() {
-    // let hm = new HeroMovement();
-    // hm.pathToLand.push([0,0]);
-    // hm.pathToLand.push([1,1]);
-    // hm.pathToLand.push([2,1]);
-    // hm.destX = 3;
-    // hm.destY = 1;
-    // hm.landAtX = 3;
-    // hm.landAtY = 1;
-    // this.drowPath(hm); 
-    this.gameMap.player.findPath(5,5);
+    this.gameMap.removeObj(this.gameMap.objects.get("player"));
   }
 
     private onTurnEnds() {
@@ -174,5 +177,9 @@ table {
   max-height: 100%;
   overflow: scroll;
   background-color: black;
+}
+
+.path {
+  pointer-events: none;
 }
 </style>
