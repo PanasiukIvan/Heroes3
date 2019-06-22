@@ -6,6 +6,7 @@ export class MapFile {
     public height: any;
     public tiles: any;
     public objects: any;
+    public hero: any;
     public object_descriptions: any;
 }
 
@@ -184,5 +185,7 @@ map1.objects = [
     new GameObject("tree_131",31,6,objectPreferences[0]),
     new GameObject("ore_cart_1", 27,27,objectPreferences[6])
 ];
+
+map1.hero = new GameObject("player", 4 , 4, objectPreferences[7]);
 
 export default map1;

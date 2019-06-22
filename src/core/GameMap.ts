@@ -1,7 +1,7 @@
 import {TilePreference, tilePreferences} from "./resources/TilesPreferences";
 import {GameObject} from "./resources/ObjectPreferences";
 import {GameConfig} from "./resources/GameConfig";
-import { Player } from './Player';
+import { Player, Hero } from './Player';
 
 export class GameMap {
     width: number;
@@ -12,6 +12,7 @@ export class GameMap {
     objectRemovedSubscribers : Array<any> = [];                                 
     objectAddedSubscribers : Array<any> = [];
     player : Player = new Player([], this);
+    player_id : string = "";
     day : number = 0;  // Currend day of week
 
     constructor(mapFile: any) {
@@ -20,6 +21,7 @@ export class GameMap {
         this.height = mapFile.height;
         this._loadTiles(mapFile.tiles);
         this._loadObjects(mapFile.objects);
+        this._loadHero(mapFile.hero);
         
     };
 
@@ -78,6 +80,13 @@ export class GameMap {
                 this._modifyMovementMap(obj.posX, obj.posY, obj.preferences.width, obj.preferences.height, GameConfig.TILE_CANNOT_WALK);
             }
         })
+    }
+
+    private _loadHero(obj : GameObject) {
+        this.objects.set(obj.index, obj)
+        this.player_id = obj.index;
+        let hero : Hero = new Hero(obj.preferences);
+        this.player = new Player([hero], this);
     }
 
     private _createArray2D (width: number, height: number): Array<Array<TilePreference>> {
